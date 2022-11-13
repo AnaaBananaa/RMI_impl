@@ -4,9 +4,9 @@ public class Server {
 
     public static void main(String[] args) throws Exception{
 
-        AddImpl obj = new AddImpl();
+        Calculadora obj = new Calculadora();
         Naming.rebind("Add", obj);
-        AddImpl obj2 = new AddImpl();
+        CalculadoraAvancada obj2 = new CalculadoraAvancada();
         Naming.rebind("Add2", obj2);
         System.out.println("server iniciou");
     }
