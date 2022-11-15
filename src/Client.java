@@ -4,14 +4,32 @@ import java.util.Scanner;
 public class Client {
 
     public static void main(String[] args) throws Exception {
+        String host = "";
+        int port = 0;
+        Scanner s = new Scanner(System.in);
+        System.out.println("Digite o endereco do Host: ");
+        host = s.next();
+        while(!verificaHost(host)) {
+            System.out.println("Insira um host valido (ex.: 192.168.0.1)");
+            host = s.next();
+        }
+        System.out.println("Digite a porta: (ex.: 8081)");
+        while(true) {
+            try {
+                port = s.nextInt();
+                break;
+            } catch(NumberFormatException e) {
+                System.out.println("Insira uma porta valida (ex.: 8081)");
+            }
+        }
+        
         boolean sair = true;
         while (sair){
             System.out.println("Digite 1 - calculadora comum 2 - calculadora avançada 3 - sair ");
-            Scanner s = new Scanner(System.in);
             int selecionado = s.nextInt();
             switch (selecionado){
                 case 1:
-                    ICalculadora obj = (ICalculadora) Naming.lookup("Add");
+                    ICalculadora obj = (ICalculadora) Naming.lookup("rmi://"+host+":"+port+"/Add");
                     System.out.println("Digite 1 - soma  2 - multiplicação 3 - subtração 4 - divisão ");
                     int valor = s.nextInt();
                     int x = 0;
@@ -42,7 +60,7 @@ public class Client {
                     }
                     break;
                 case 2:
-                    ICalculadoraAvancada obj2 = (ICalculadoraAvancada) Naming.lookup("Add2");
+                    ICalculadoraAvancada obj2 = (ICalculadoraAvancada) Naming.lookup("rmi://"+host+":"+port+"/Add2");
                     System.out.println("Digite o valor que deseja elevar ao quadrado: ");
                     int quadrado = s.nextInt();
                     int n2 = obj2.quadrado(quadrado);
@@ -55,6 +73,18 @@ public class Client {
                     System.out.println("Opção inexistente");
                     break;
             }
+        }
+    }
+    
+    private static boolean verificaHost(String host) {
+        String[] bytes = host.split("\\.");
+        try {
+            for(int i = 0; i < 4; i++) {
+                Integer.parseInt(bytes[i]);
+            }
+            return true;
+        } catch(Exception e) {
+            return false;
         }
     }
 }
